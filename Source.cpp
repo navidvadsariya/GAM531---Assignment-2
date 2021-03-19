@@ -347,9 +347,6 @@ int main()
     float radius = 10.0f;
 
     applyTextureToCube(texture);
-     //applyTextureForCube2(texture);
-    // applyTextureForCube3(texture);
-     //applyTextureForCube4(texture);
 
     // render loop
     while (!glfwWindowShouldClose(window))
