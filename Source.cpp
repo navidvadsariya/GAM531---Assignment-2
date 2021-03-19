@@ -24,9 +24,15 @@ void drawCube2();
 void drawCube3();
 void drawCube4();
 
-void applyTextureToCube(unsigned int& texture);
+void applyTextureToCube1(unsigned int& texture);
+void applyTextureToCube2(unsigned int& texture);
+void applyTextureToCube3(unsigned int& texture);
+void applyTextureToCube4(unsigned int& texture);
 
-void applySecondTextureToCube(unsigned int& texture);
+void applySecondTextureToCube1(unsigned int& texture);
+void applySecondTextureToCube2(unsigned int& texture);
+void applySecondTextureToCube3(unsigned int& texture);
+void applySecondTextureToCube4(unsigned int& texture);
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 
@@ -64,6 +70,8 @@ bool removeTransformation = false;  //processInput functions sets this value tru
 bool isCubeRotating = false;        //processInput functions sets this value true if user presses R
 
 int randomCubeNumber = -1;          //stores cube number from 1-4
+
+bool changeTexture = false;
 
 int main()
 {
@@ -346,7 +354,7 @@ int main()
     // setting the radius variable 
     float radius = 10.0f;
 
-    applyTextureToCube(texture);
+    
 
     // render loop
     while (!glfwWindowShouldClose(window))
@@ -361,7 +369,12 @@ int main()
         ourShader.setMat4("view", view);
 
         //cube 1 
-   
+        if (changeTexture) {
+            applySecondTextureToCube1(texture);
+        }
+        else {
+             applyTextureToCube1(texture);
+        }
         glm::mat4 model1 = glm::mat4(1.0f);
         glm::mat4 projection1 = glm::mat4(1.0f);
         if (randomCubeNumber == 1) {
@@ -390,6 +403,12 @@ int main()
         drawCube1();
 
         //cube 2
+        if (changeTexture) {
+            applySecondTextureToCube2(texture);
+        }
+        else {
+            applyTextureToCube2(texture);
+        }
         glm::mat4 model2 = glm::mat4(1.0f);
         glm::mat4 projection2 = glm::mat4(1.0f);
 
@@ -418,6 +437,12 @@ int main()
         drawCube2();
 
         ////cube 3
+        if (changeTexture) {
+            applySecondTextureToCube3(texture);
+        }
+        else {
+            applyTextureToCube3(texture);
+        }
         glm::mat4 model3 = glm::mat4(1.0f);
         glm::mat4 projection3 = glm::mat4(1.0f);
 
@@ -445,6 +470,12 @@ int main()
         drawCube3();
 
         ////cube 4
+        if (changeTexture) {
+            applySecondTextureToCube4(texture);
+        }
+        else {
+            applyTextureToCube4(texture);
+        }
         glm::mat4 model4 = glm::mat4(1.0f);
         glm::mat4 projection4 = glm::mat4(1.0f);
 
@@ -518,10 +549,10 @@ void processInput(GLFWwindow* window)
         isCubeRotating = false;
     }
     if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {
-        applySecondTextureToCube(texture);
+        changeTexture = true;
     }
     if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS) {
-        applyTextureToCube(texture);
+        changeTexture = false;
     }
     // increate the camera speed using the deltaTime
     float cameraSpeed = 3 * deltaTime;
@@ -608,7 +639,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     cameraFront = glm::normalize(front);
 }
 
-void applyTextureToCube(unsigned int& texture)
+void applyTextureToCube1(unsigned int& texture)
 {
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture); // the texture object is applied with all the texture operations
@@ -619,7 +650,7 @@ void applyTextureToCube(unsigned int& texture)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     // load image (mybox.png) and create the texture 
     int width, height, nrChannels;
-    unsigned char* data = stbi_load("assets/mybox.png", &width, &height, &nrChannels, 0);
+    unsigned char* data = stbi_load("assets/1.jpg", &width, &height, &nrChannels, 0);
     // Generate mipmaps
     if (data)
     {
@@ -633,7 +664,8 @@ void applyTextureToCube(unsigned int& texture)
     }
     stbi_image_free(data);
 }
-void applySecondTextureToCube(unsigned int& texture)
+
+void applyTextureToCube2(unsigned int& texture)
 {
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture); // the texture object is applied with all the texture operations
@@ -644,7 +676,154 @@ void applySecondTextureToCube(unsigned int& texture)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     // load image (mybox.png) and create the texture 
     int width, height, nrChannels;
-    unsigned char* data = stbi_load("assets/mybox3.jpg", &width, &height, &nrChannels, 0);
+    unsigned char* data = stbi_load("assets/2.png", &width, &height, &nrChannels, 0);
+    // Generate mipmaps
+    if (data)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+    }
+    else
+    {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(data);
+}
+void applyTextureToCube3(unsigned int& texture)
+{
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture); // the texture object is applied with all the texture operations
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set GL_REPEAT as the wrapping method)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // texture filtering parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // load image (mybox.png) and create the texture 
+    int width, height, nrChannels;
+    unsigned char* data = stbi_load("assets/3.jpg", &width, &height, &nrChannels, 0);
+    // Generate mipmaps
+    if (data)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+    }
+    else
+    {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(data);
+}
+void applyTextureToCube4(unsigned int& texture)
+{
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture); // the texture object is applied with all the texture operations
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set GL_REPEAT as the wrapping method)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // texture filtering parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // load image (mybox.png) and create the texture 
+    int width, height, nrChannels;
+    unsigned char* data = stbi_load("assets/4.jpg", &width, &height, &nrChannels, 0);
+    // Generate mipmaps
+    if (data)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+    }
+    else
+    {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(data);
+}
+void applySecondTextureToCube1(unsigned int& texture)
+{
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture); // the texture object is applied with all the texture operations
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set GL_REPEAT as the wrapping method)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // texture filtering parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // load image (mybox.png) and create the texture 
+    int width, height, nrChannels;
+    unsigned char* data = stbi_load("assets/5.jpg", &width, &height, &nrChannels, 0);
+    // Generate mipmaps
+    if (data)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else
+    {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(data);
+}
+void applySecondTextureToCube2(unsigned int& texture)
+{
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture); // the texture object is applied with all the texture operations
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set GL_REPEAT as the wrapping method)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // texture filtering parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // load image (mybox.png) and create the texture 
+    int width, height, nrChannels;
+    unsigned char* data = stbi_load("assets/6.jpg", &width, &height, &nrChannels, 0);
+    // Generate mipmaps
+    if (data)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else
+    {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(data);
+}
+void applySecondTextureToCube3(unsigned int& texture)
+{
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture); // the texture object is applied with all the texture operations
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set GL_REPEAT as the wrapping method)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // texture filtering parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // load image (mybox.png) and create the texture 
+    int width, height, nrChannels;
+    unsigned char* data = stbi_load("assets/7.jpg", &width, &height, &nrChannels, 0);
+    // Generate mipmaps
+    if (data)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else
+    {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(data);
+}
+void applySecondTextureToCube4(unsigned int& texture)
+{
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture); // the texture object is applied with all the texture operations
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set GL_REPEAT as the wrapping method)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // texture filtering parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // load image (mybox.png) and create the texture 
+    int width, height, nrChannels;
+    unsigned char* data = stbi_load("assets/8.jpg", &width, &height, &nrChannels, 0);
     // Generate mipmaps
     if (data)
     {
