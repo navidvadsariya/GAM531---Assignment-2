@@ -109,10 +109,6 @@ int main()
     // build and compile our shader program
 
     Shader ourShader("shader.vs", "shader.fs"); // you can name your shader files however you like
-    //added *****
-     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    //added *****
 
     //cube 1
     float vertices1[] = {
